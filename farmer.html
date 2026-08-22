@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Mawashi - حساب المربي</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7f5;
+            color: #1f2937;
+        }
+
+        header {
+            background: #166534;
+            color: white;
+            padding: 25px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .profile {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+        }
+
+        .stat h2 {
+            color: #166534;
+            margin: 10px 0;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            border: none;
+            background: #166534;
+            color: white;
+            padding: 13px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #14532d;
+        }
+
+        .secondary {
+            background: #374151;
+        }
+
+        .records {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background: #f0fdf4;
+        }
+
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #ecfdf5;
+            color: #166534;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🐑 Mawashi</h1>
+    <p>لوحة تحكم المربي</p>
+</header>
+
+<main>
+
+    <section class="profile">
+        <h2>👤 بيانات المربي</h2>
+
+        <p><strong>الاسم:</strong> عبد الله بن أحمد</p>
+        <p><strong>الولاية:</strong> باتنة</p>
+        <p><strong>البلدية:</strong> باتنة</p>
+        <p><strong>رقم المربي:</strong> MW-0001</p>
+    </section>
+
+
+    <section class="stats">
+
+        <div class="stat">
+            <div>🐑</div>
+            <h2 id="sheepCount">120</h2>
+            <p>إجمالي الأغنام</p>
+        </div>
+
+        <div class="stat">
+            <div>🍼</div>
+            <h2 id="birthCount">18</h2>
+            <p>الولادات</p>
+        </div>
+
+        <div class="stat">
+            <div>⚠️</div>
+            <h2 id="deathCount">3</h2>
+            <p>الوفيات</p>
+        </div>
+
+        <div class="stat">
+            <div>🌾</div>
+            <h2 id="feedAmount">120</h2>
+            <p>حصة العلف</p>
+        </div>
+
+    </section>
+
+
+    <section>
+
+        <h2>إدارة القطيع</h2>
+
+        <div class="actions">
+
+            <button onclick="addSheep()">
+                ➕ إضافة حيوان
+            </button>
+
+            <button onclick="registerBirth()">
+                🍼 تسجيل ولادة
+            </button>
+
+            <button onclick="registerDeath()">
+                ☠️ تسجيل نفوق
+            </button>
+
+            <button class="secondary" onclick="showMessage('تم فتح سجل القطيع')">
+    📋 سجل القطيع
+</button>
+
+        </div>
+    </section>
+
+    <section class="records">
+
+        <h2>📋 آخر العمليات</h2>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>التاريخ</th>
+                    <th>العملية</th>
+                    <th>العدد</th>
+                </tr>
+            </thead>
+
+            <tbody id="recordsBody">
+
+                <tr>
+                    <td>21/08/2026</td>
+                    <td>ولادة</td>
+                    <td>2</td>
+                </tr>
+
+                <tr>
+                    <td>18/08/2026</td>
+                    <td>نفوق</td>
+                    <td>1</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <div id="message"></div>
+
+</main>
+
+<script>
+
+    let sheepCount = 120;
+    let birthCount = 18;
+    let deathCount = 3;
+
+    function updateDisplay() {
+
+        document.getElementById("sheepCount").textContent = sheepCount;
+
+        document.getElementById("birthCount").textContent = birthCount;
+
+        document.getElementById("deathCount").textContent = deathCount;
+
+        document.getElementById("feedAmount").textContent =
+            sheepCount + " وحدة";
+    }
+
+    function addSheep() {
+
+        sheepCount++;
+
+        updateDisplay();
+
+        showMessage("تمت إضافة حيوان جديد إلى القطيع.");
+    }
+
+    function registerBirth() {
+
+        sheepCount++;
+
+        birthCount++;
+
+        updateDisplay();
+
+        showMessage("تم تسجيل ولادة جديدة.");
+    }
+
+    function registerDeath() {
+
+        if (sheepCount > 0) {
+
+            sheepCount--;
+
+            deathCount++;
+
+            updateDisplay();
+
+            showMessage("تم تسجيل حالة نفوق.");
+
+        }
+
+    }
+
+    function showMessage(text) {
+
+        const message = document.getElementById("message");
+
+        message.textContent = text;
+
+        message.style.display = "block";
+
+    }
+
+</script>
+
+</body>
+</html>

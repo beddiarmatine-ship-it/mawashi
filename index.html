@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mawashi | نظام إدارة الثروة الحيوانية</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Tahoma, sans-serif;
+    background: #f4f7f5;
+    color: #1f2937;
+}
+
+button,
+input,
+select {
+    font-family: inherit;
+}
+
+header {
+    background: #166534;
+    color: white;
+    padding: 18px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.logo span {
+    font-size: 14px;
+    display: block;
+    opacity: .85;
+}
+
+header button {
+    background: white;
+    color: #166534;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 30px 20px;
+}
+
+.screen {
+    display: none;
+}
+
+.screen.active {
+    display: block;
+}
+
+.hero {
+    text-align: center;
+    padding: 50px 20px;
+}
+
+.hero h1 {
+    font-size: 42px;
+    color: #166534;
+    margin-bottom: 10px;
+}
+
+.hero p {
+    color: #6b7280;
+    font-size: 18px;
+}
+
+.role-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    max-width: 800px;
+    margin: 40px auto;
+}
+
+.role-card {
+    background: white;
+    border-radius: 16px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,.08);
+}
+
+.role-icon {
+    font-size: 60px;
+}
+
+.role-card h2 {
+    color: #166534;
+}
+
+.btn {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    background: #166534;
+    color: white;
+}
+
+.btn:hover {
+    background: #14532d;
+}
+
+.btn-secondary {
+    background: #374151;
+}
+
+.btn-danger {
+    background: #b91c1c;
+}
+
+.btn-warning {
+    background: #b45309;
+}
+
+.btn-light {
+    background: #e5e7eb;
+    color: #1f2937;
+}
+
+.dashboard-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.dashboard-title h1 {
+    margin: 0;
+    color: #166534;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 18px;
+    margin-bottom: 25px;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.stat-card .icon {
+    font-size: 30px;
+}
+
+.stat-card .number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #166534;
+    margin: 8px 0;
+}
+
+.stat-card p {
+    margin: 0;
+    color: #6b7280;
+}
+
+.panel {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.06);
+}
+
+.panel h2 {
+    margin-top: 0;
+    color: #166534;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.info-box {
+    background: #f9fafb;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.info-box strong {
+    display: block;
+    margin-bottom: 6px;
+    color: #166534;
+}
+
+.actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+th,
+td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: center;
+}
+
+th {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.badge-green {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.badge-orange {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.badge-red {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+input,
+select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 1000;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 550px;
+    border-radius: 15px;
+    padding: 25px;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h2 {
+    color: #166534;
+}
+
+.notification {
+    position: fixed;
+    bottom: 25px;
+    left: 25px;
+    background: #166534;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: none;
+    z-index: 2000;
+}
+
+.notification.show {
+    display: block;
+}
+
+.search-box {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    margin: 0;
+}
+
+@media(max-width:600px) {
+    header {
+        padding: 15px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    table {
+        font-size: 13px;
+    }
+
+    th,
+    td {
+        padding: 8px 5px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">
+        🐑 Mawashi
+        <span>منظومة رقمية لإدارة الثروة الحيوانية</span>
+    </div>
+
+    <button onclick="goHome()">الرئيسية</button>
+</header>
+
+<!-- الصفحة الرئيسية -->
+
+<section id="homeScreen" class="screen active">
+
+    <div class="container">
+
+        <div class="hero">
+
+            <h1>🐑 Mawashi</h1>
+
+            <p>
+                نموذج أولي لمنظومة رقمية لإدارة الثروة الحيوانية
+                وتنظيم بيانات المربين والقطيع والدعم.
+            </p>
+
+        </div>
+
+        <div class="role-container">
+
+            <div class="role-card">
+
+                <div class="role-icon">🐑</div>
+
+                <h2>المربي</h2>
+
+                <p>
+                    إدارة القطيع وتسجيل الولادات
+                    والنفوق والمبيعات.
+                </p>
+
+                <button class="btn" onclick="showFarmer()">
+                    الدخول كمربي
+                </button>
+
+            </div>
+
+            <div class="role-card">
+
+                <div class="role-icon">🏛️</div>
+
+                <h2>مسؤول الدولة</h2>
+
+                <p>
+                    متابعة المربين والقطعان
+                    والإحصائيات والدعم.
+                </p>
+
+                <button class="btn" onclick="showGovernment()">
+                    الدخول كمسؤول
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- لوحة المربي -->
+
+<section id="farmerScreen" class="screen">
+
+<div class="container">
+
+    <div class="dashboard-title">
+
+        <div>
+            <h1>🐑 لوحة المربي</h1>
+            <p>إدارة القطيع والبيانات الخاصة بالمربي</p>
+        </div>
+
+        <button class="btn btn-light" onclick="goHome()">
+            العودة للرئيسية
+        </button>
+
+    </div>
+
+    <div class="panel">
+
+        <h2>👤 بيانات المربي</h2>
+
+        <div class="profile-grid">
+
+            <div class="info-box">
+                <strong>الاسم</strong>
+                عبد الله بن أحمد
+            </div>
+
+            <div class="info-box">
+                <strong>رقم المربي</strong>
+                MW-0001
+            </div>
+
+            <div class="info-box">
+                <strong>الولاية</strong>
+                باتنة
+            </div>
+
+            <div class="info-box">
+                <strong>البلدية</strong>
+                باتنة
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <div class="icon">🐑</div>
+            <div class="number" id="farmerSheep">120</div>
+            <p>إجمالي الأغنام</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🍼</div>
+            <div class="number" id="farmerBirths">18</div>
+            <p>الولادات</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">⚠️</div>
+            <div class="number" id="farmerDeaths">3</div>
+            <p>الوفيات</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🌾</div>
+            <div class="number" id="farmerFeed">120</div>
+            <p>وحدة العلف</p>
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <h2>⚙️ إدارة القطيع</h2>
+
+        <div class="actions">
+
+            <button class="btn" onclick="openAnimalModal()">
+                ➕ إضافة حيوان
+            </button>
+
+            <button class="btn" onclick="registerBirth()">
+                🍼 تسجيل ولادة
+            </button>
+
+            <button class="btn btn-danger" onclick="registerDeath()">
+                ☠️ تسجيل نفوق
+            </button>
+
+            <button class="btn btn-secondary" onclick="registerSale()">
+                💰 تسجيل بيع
+            </button>
+
+        </div>
+
+    </div>
+
+    <div class="panel">
+
+        <h2>📋 آخر العمليات</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>التاريخ</th>
+                    <th>العملية</th>
+                    <th>العدد</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="farmerRecords">
+
+                <tr>
+                    <td>21/08/2026</td>
+                    <td>ولادة</td>
+                    <td>2</td>
+                </tr>
+
+                <tr>
+                    <td>18/08/2026</td>
+                    <td>نفوق</td>
+                    <td>1</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</section>
+<!-- لوحة مسؤول الدولة -->
+
+<section id="governmentScreen" class="screen">
+
+<div class="container">
+
+    <div class="dashboard-title">
+
+        <div>
+            <h1>🏛️ لوحة الدولة</h1>
+            <p>متابعة المربين والقطيع والإحصائيات</p>
+        </div>
+
+        <button class="btn btn-light" onclick="goHome()">
+            العودة للرئيسية
+        </button>
+
+    </div>
+
+
+    <!-- الإحصائيات العامة -->
+
+    <div class="stats">
+
+        <div class="stat-card">
+            <div class="icon">👨‍🌾</div>
+            <div class="number" id="govBreeders">1,248</div>
+            <p>عدد المربين المسجلين</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🐑</div>
+            <div class="number" id="govSheep">86,420</div>
+            <p>إجمالي الأغنام</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🍼</div>
+            <div class="number" id="govBirths">7,315</div>
+            <p>الولادات المسجلة</p>
+        </div>
+
+        <div class="stat-card">
+            <div class="icon">🌾</div>
+            <div class="number" id="govFeed">86,420</div>
+            <p>الوحدات التقديرية للعلف</p>
+        </div>
+
+    </div>
+
+
+    <!-- البحث عن المربين -->
+
+    <div class="panel">
+
+        <h2>🔎 البحث عن مربي</h2>
+
+        <div class="search-box">
+
+            <input
+                type="text"
+                id="breederSearch"
+                placeholder="ابحث بالاسم أو رقم المربي..."
+            >
+
+            <button class="btn" onclick="searchBreeder()">
+                بحث
+            </button>
+
+        </div>
+
+        <div id="searchResult"></div>
+
+    </div>
+
+
+    <!-- قائمة المربين -->
+
+    <div class="panel">
+
+        <h2>👨‍🌾 المربون المسجلون</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>رقم المربي</th>
+                    <th>الاسم</th>
+                    <th>الولاية</th>
+                    <th>عدد الأغنام</th>
+                    <th>الحالة</th>
+                    <th>الملف</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="breedersTable">
+
+                <tr>
+                    <td>MW-0001</td>
+                    <td>عبد الله بن أحمد</td>
+                    <td>باتنة</td>
+                    <td>120</td>
+                    <td>
+                        <span class="badge badge-green">
+                            منتظم
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            class="btn"
+                            onclick="viewBreeder('MW-0001')"
+                        >
+                            عرض
+                        </button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>MW-0002</td>
+                    <td>محمد علي</td>
+                    <td>بسكرة</td>
+                    <td>245</td>
+                    <td>
+                        <span class="badge badge-green">
+                            منتظم
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            class="btn"
+                            onclick="viewBreeder('MW-0002')"
+                        >
+                            عرض
+                        </button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>MW-0003</td>
+                    <td>أحمد بن صالح</td>
+                    <td>الجلفة</td>
+                    <td>78</td>
+                    <td>
+                        <span class="badge badge-orange">
+                            يحتاج مراجعة
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            class="btn"
+                            onclick="viewBreeder('MW-0003')"
+                        >
+                            عرض
+                        </button>
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>MW-0004</td>
+                    <td>عمر بوزيد</td>
+                    <td>المسيلة</td>
+                    <td>310</td>
+                    <td>
+                        <span class="badge badge-green">
+                            منتظم
+                        </span>
+                    </td>
+                    <td>
+                        <button
+                            class="btn"
+                            onclick="viewBreeder('MW-0004')"
+                        >
+                            عرض
+                        </button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- التنبيهات -->
+
+    <div class="panel">
+
+        <h2>🚨 التنبيهات</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>التاريخ</th>
+                    <th>المربي</th>
+                    <th>التنبيه</th>
+                    <th>الأولوية</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>21/08/2026</td>
+                    <td>أحمد بن صالح</td>
+                    <td>
+                        اختلاف بين العدد المسجل والبيانات المصرح بها
+                    </td>
+                    <td>
+                        <span class="badge badge-orange">
+                            متوسطة
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>20/08/2026</td>
+                    <td>مربي MW-0045</td>
+                    <td>
+                        لم يتم تحديث بيانات القطيع
+                    </td>
+                    <td>
+                        <span class="badge badge-orange">
+                            متوسطة
+                        </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>19/08/2026</td>
+                    <td>مربي MW-0091</td>
+                    <td>
+                        تغير غير معتاد في عدد الحيوانات
+                    </td>
+                    <td>
+                        <span class="badge badge-red">
+                            عالية
+                        </span>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- التوزيع حسب الولايات -->
+
+    <div class="panel">
+
+        <h2>📊 توزيع القطيع حسب الولاية</h2>
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>الولاية</th>
+                    <th>عدد المربين</th>
+                    <th>عدد الأغنام</th>
+                    <th>نسبة المربين</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>باتنة</td>
+                    <td>210</td>
+                    <td>14,800</td>
+                    <td>16.8%</td>
+                </tr>
+
+                <tr>
+                    <td>بسكرة</td>
+                    <td>185</td>
+                    <td>12,450</td>
+                    <td>14.8%</td>
+                </tr>
+
+                <tr>
+                    <td>الجلفة</td>
+                    <td>310</td>
+                    <td>25,600</td>
+                    <td>24.8%</td>
+                </tr>
+
+                <tr>
+                    <td>المسيلة</td>
+                    <td>165</td>
+                    <td>10,320</td>
+                    <td>13.2%</td>
+                </tr>
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- نافذة إضافة حيوان -->
+
+<div id="animalModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>➕ إضافة حيوان</h2>
+
+        <label>
+            نوع الحيوان
+            <select id="animalType">
+                <option>خروف</option>
+                <option>نعجة</option>
+                <option>كبش</option>
+                <option>حمل</option>
+            </select>
+        </label>
+
+        <label>
+            رقم التعريف
+            <input
+                type="text"
+                id="animalId"
+                placeholder="مثال: DZ-MW-00001"
+            >
+        </label>
+
+        <label>
+            الوزن بالكيلوغرام
+            <input
+                type="number"
+                id="animalWeight"
+                placeholder="مثال: 45"
+            >
+        </label>
+
+        <label>
+            تاريخ الميلاد
+            <input
+                type="date"
+                id="animalBirthDate"
+            >
+        </label>
+
+        <div class="actions">
+
+            <button
+                class="btn"
+                onclick="saveAnimal()"
+            >
+                حفظ
+            </button>
+
+            <button
+                class="btn btn-light"
+                onclick="closeModal()"
+            >
+                إلغاء
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- نافذة ملف المربي -->
+
+<div id="breederModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>👨‍🌾 ملف المربي</h2>
+
+        <div id="breederDetails"></div>
+
+        <br>
+
+        <button
+            class="btn btn-light"
+            onclick="closeBreederModal()"
+        >
+            إغلاق
+        </button>
+
+    </div>
+
+</div>
+
+
+<div id="notification" class="notification"></div>
+<script>
+
+let sheep = 120;
+let births = 18;
+let deaths = 3;
+let sales = 0;
+
+
+/* =========================
+   التنقل بين الصفحات
+========================= */
+
+function hideAllScreens() {
+
+    document.querySelectorAll(".screen").forEach(function(screen) {
+        screen.classList.remove("active");
+    });
+
+}
+
+
+function goHome() {
+
+    hideAllScreens();
+
+    document.getElementById("homeScreen")
+        .classList.add("active");
+
+}
+
+
+function showFarmer() {
+
+    hideAllScreens();
+
+    document.getElementById("farmerScreen")
+        .classList.add("active");
+
+}
+
+
+function showGovernment() {
+
+    hideAllScreens();
+
+    document.getElementById("governmentScreen")
+        .classList.add("active");
+
+}
+
+
+/* =========================
+   لوحة المربي
+========================= */
+
+function updateFarmerStats() {
+
+    document.getElementById("farmerSheep")
+        .textContent = sheep;
+
+    document.getElementById("farmerBirths")
+        .textContent = births;
+
+    document.getElementById("farmerDeaths")
+        .textContent = deaths;
+
+    document.getElementById("farmerFeed")
+        .textContent = sheep;
+
+}
+
+
+/* =========================
+   إضافة حيوان
+========================= */
+
+function openAnimalModal() {
+
+    document.getElementById("animalModal")
+        .classList.add("active");
+
+}
+
+
+function closeModal() {
+
+    document.getElementById("animalModal")
+        .classList.remove("active");
+
+}
+
+
+function saveAnimal() {
+
+    const type =
+        document.getElementById("animalType").value;
+
+    const id =
+        document.getElementById("animalId").value;
+
+    const weight =
+        document.getElementById("animalWeight").value;
+
+    if (!id || !weight) {
+
+        notify("يرجى إدخال رقم التعريف والوزن.");
+
+        return;
+
+    }
+
+    sheep++;
+
+    updateFarmerStats();
+
+    addRecord(
+        "إضافة حيوان",
+        1
+    );
+
+    closeModal();
+
+    notify(
+        "تمت إضافة " + type +
+        " برقم " + id +
+        " ووزن " + weight + " كغ."
+    );
+
+}
+
+
+/* =========================
+   تسجيل ولادة
+========================= */
+
+function registerBirth() {
+
+    sheep++;
+
+    births++;
+
+    updateFarmerStats();
+
+    addRecord(
+        "ولادة",
+        1
+    );
+
+    notify(
+        "تم تسجيل ولادة جديدة بنجاح."
+    );
+
+}
+
+
+/* =========================
+   تسجيل نفوق
+========================= */
+
+function registerDeath() {
+
+    if (sheep <= 0) {
+
+        notify("لا يمكن أن يكون عدد القطيع أقل من صفر.");
+
+        return;
+
+    }
+
+    sheep--;
+
+    deaths++;
+
+    updateFarmerStats();
+
+    addRecord(
+        "نفوق",
+        1
+    );
+
+    notify(
+        "تم تسجيل حالة النفوق."
+    );
+
+}
+
+
+/* =========================
+   تسجيل البيع
+========================= */
+
+function registerSale() {
+
+    if (sheep <= 0) {
+
+        notify("لا يوجد حيوان متاح للبيع.");
+
+        return;
+
+    }
+
+    sheep--;
+
+    sales++;
+
+    updateFarmerStats();
+
+    addRecord(
+        "بيع",
+        1
+    );
+
+    notify(
+        "تم تسجيل عملية بيع."
+    );
+
+}
+
+
+/* =========================
+   إضافة عملية إلى السجل
+========================= */
+
+function addRecord(operation, number) {
+
+    const table =
+        document.getElementById("farmerRecords");
+
+    const row =
+        document.createElement("tr");
+
+    const date =
+        new Date().toLocaleDateString("ar-DZ");
+
+    row.innerHTML =
+
+        "<td>" + date + "</td>" +
+
+        "<td>" + operation + "</td>" +
+
+        "<td>" + number + "</td>";
+
+    table.prepend(row);
+
+}
+
+
+/* =========================
+   البحث عن مربي
+========================= */
+
+function searchBreeder() {
+
+    const search =
+        document.getElementById("breederSearch")
+        .value
+        .trim()
+        .toLowerCase();
+
+    const result =
+        document.getElementById("searchResult");
+
+    if (!search) {
+
+        result.innerHTML =
+            "<p>اكتب اسم المربي أو رقم المربي للبحث.</p>";
+
+        return;
+
+    }
+
+
+    const breeders = [
+
+        {
+            id: "MW-0001",
+            name: "عبد الله بن أحمد",
+            state: "باتنة",
+            sheep: 120
+        },
+
+        {
+            id: "MW-0002",
+            name: "محمد علي",
+            state: "بسكرة",
+            sheep: 245
+        },
+
+        {
+            id: "MW-0003",
+            name: "أحمد بن صالح",
+            state: "الجلفة",
+            sheep: 78
+        },
+
+        {
+            id: "MW-0004",
+            name: "عمر بوزيد",
+            state: "المسيلة",
+            sheep: 310
+        }
+
+    ];
+
+
+    const found =
+        breeders.find(function(breeder) {
+
+            return (
+
+                breeder.id.toLowerCase()
+                    .includes(search)
+
+                ||
+
+                breeder.name.toLowerCase()
+                    .includes(search)
+
+                ||
+
+                breeder.state.toLowerCase()
+                    .includes(search)
+
+            );
+
+        });
+
+
+    if (!found) {
+
+        result.innerHTML =
+            "<p class='badge badge-red'>" +
+            "لم يتم العثور على المربي." +
+            "</p>";
+
+        return;
+
+    }
+
+
+    result.innerHTML =
+
+        "<div class='info-box'>" +
+
+        "<strong>تم العثور على المربي</strong>" +
+
+        "رقم المربي: " + found.id +
+        "<br>" +
+
+        "الاسم: " + found.name +
+        "<br>" +
+
+        "الولاية: " + found.state +
+        "<br>" +
+
+        "عدد الأغنام: " + found.sheep +
+
+        "</div>";
+
+}
+
+
+/* =========================
+   عرض ملف المربي
+========================= */
+
+function viewBreeder(id) {
+
+    const details =
+        document.getElementById("breederDetails");
+
+
+    const breeders = {
+
+        "MW-0001": {
+
+            name: "عبد الله بن أحمد",
+
+            state: "باتنة",
+
+            municipality: "باتنة",
+
+            sheep: 120,
+
+            births: 18,
+
+            deaths: 3,
+
+            status: "منتظم"
+
+        },
+
+
+        "MW-0002": {
+
+            name: "محمد علي",
+
+            state: "بسكرة",
+
+            municipality: "بسكرة",
+
+            sheep: 245,
+
+            births: 31,
+
+            deaths: 5,
+
+            status: "منتظم"
+
+        },
+
+
+        "MW-0003": {
+
+            name: "أحمد بن صالح",
+
+            state: "الجلفة",
+
+            municipality: "الجلفة",
+
+            sheep: 78,
+
+            births: 8,
+
+            deaths: 2,
+
+            status: "يحتاج مراجعة"
+
+        },
+
+
+        "MW-0004": {
+
+            name: "عمر بوزيد",
+
+            state: "المسيلة",
+
+            municipality: "المسيلة",
+
+            sheep: 310,
+
+            births: 42,
+
+            deaths: 7,
+
+            status: "منتظم"
+
+        }
+
+    };
+
+
+    const breeder =
+        breeders[id];
+
+
+    if (!breeder) {
+
+        notify(
+            "بيانات المربي غير موجودة."
+        );
+
+        return;
+
+    }
+
+
+    details.innerHTML =
+
+        "<div class='profile-grid'>" +
+
+        "<div class='info-box'>" +
+        "<strong>رقم المربي</strong>" +
+        id +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>الاسم</strong>" +
+        breeder.name +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>الولاية</strong>" +
+        breeder.state +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>البلدية</strong>" +
+        breeder.municipality +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>عدد الأغنام</strong>" +
+        breeder.sheep +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>الولادات</strong>" +
+        breeder.births +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>الوفيات</strong>" +
+        breeder.deaths +
+        "</div>" +
+
+        "<div class='info-box'>" +
+        "<strong>الحالة</strong>" +
+        breeder.status +
+        "</div>" +
+
+        "</div>";
+
+
+    document.getElementById("breederModal")
+        .classList.add("active");
+
+}
+
+
+function closeBreederModal() {
+
+    document.getElementById("breederModal")
+        .classList.remove("active");
+
+}
+
+
+/* =========================
+   الإشعارات
+========================= */
+
+function notify(message) {
+
+    const notification =
+        document.getElementById("notification");
+
+    notification.textContent =
+        message;
+
+    notification.classList.add("show");
+
+
+    setTimeout(function() {
+
+        notification.classList.remove("show");
+
+    }, 3000);
+
+}
+
+
+/* =========================
+   التشغيل الأولي
+========================= */
+
+updateFarmerStats();
+
+</script>
+
+</body>
+</html>
+</html>
